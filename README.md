@@ -9,6 +9,7 @@ It's an example about a SPA implementation in the context of an application that
 ## Implementation Plan
 
 A home/login page with a "provider" component that can adapt based on which one is chosen, for this example is it going to be GitHub, Google and LinkedIn.
+
 A /me page with the authenticated user information.
 
 A backend for frontend with a /token endpoint which takes the authentication code and request for an access token based on the selected provider (GitHub, Google, LinkedIn).
