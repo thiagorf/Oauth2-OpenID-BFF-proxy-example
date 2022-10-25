@@ -6,6 +6,10 @@ It's an example about a SPA implementation in the context of an application that
 
 ![Oauth2 OpenID BFF proxy diagram](https://github.com/thiagorf/Oauth2-OpenID-BFF-proxy-example/blob/docs/docs/Oauth2%20OpenID%20BFF%20Proxy.png?raw=true)
 
+## Providers Endpoint
+
+![Providers](https://github.com/thiagorf/Oauth2-OpenID-BFF-proxy-example/blob/docs/docs/Providers%20.png?raw=true)
+
 ## Implementation Plan
 
 A home/login page with a "provider" component that can adapt based on which one is chosen, for this example is it going to be GitHub, Google and LinkedIn.
