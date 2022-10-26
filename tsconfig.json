@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "baseUrl": "."
+  },
+  "references": [
+    {
+      "path": "packages/client"
+    },
+    {
+      "path": "packages/bff"
+    }
+  ],
+  "exclude": ["node_modules", "dist", "*.d.ts"]
+}
