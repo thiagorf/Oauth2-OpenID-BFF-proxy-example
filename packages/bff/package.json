@@ -1,0 +1,9 @@
+{
+  "name": "@monorepo/bff",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "echo Test from bff"
+  }
+}
