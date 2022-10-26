@@ -1,5 +1,21 @@
 {
+  "name": "oauth-openid-example",
+  "private": "true",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:thiagorf/Oauth2-OpenID-BFF-proxy-example.git",
+  "author": "thiagorf <trfarciroli@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "lerna run dev"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "lerna": "^6.0.1"
+  },
   "dependencies": {
-    "typescript": "^4.8.4"
+    "eslint": "^8.26.0"
   }
 }
