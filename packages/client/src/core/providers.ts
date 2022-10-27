@@ -2,14 +2,13 @@ const bffURL = import.meta.env.BFF_PROXY_URL;
 
 //type IdentityProvider = "github" | "google" | "linkedin";
 
-interface OauthProvider {
+export interface OauthProvider {
     provider: string;
     url: string;
     response_type: "code";
     authCode: {
         client_id: string;
         redirect_uri: string;
-        state: string;
         scope: string;
     };
     bffProxy: {
@@ -25,7 +24,6 @@ export const providers: OauthProvider[] = ["GOOGLE", "GITHUB", "LINKEDIN"].map(
         authCode: {
             client_id: import.meta.env[`VITE_${openid}_CLIENT_ID`],
             redirect_uri: import.meta.env[`VITE_${openid}_REDIRECT_URI`],
-            state: import.meta.env[`VITE_${openid}_STATE`],
             scope: import.meta.env[`VITE_${openid}_SCOPE`],
         },
         bffProxy: {
