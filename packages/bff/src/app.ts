@@ -15,10 +15,13 @@ app.get("/health", (_, res: Response) => {
 app.post("/token", async (req: Request, res: Response) => {
     const { code } = req.body;
 
-    const state = req.params.state;
-    const provider_name = state.split("|")[1];
+    const state = req.query.state as string;
 
-    const { url, ...provider } = findProviderCredentials(provider_name);
+    const { url, ...provider } = findProviderCredentials(state);
+
+    console.log(url);
+
+    console.log(provider.redirect_uri);
 
     const result = await axios.post(
         url,
@@ -30,6 +33,10 @@ app.post("/token", async (req: Request, res: Response) => {
             },
         }
     );
+
+    res.cookie("token", JSON.stringify(result.data), {
+        maxAge: 15000 * 60,
+    });
 
     return res.json(result.data);
 });

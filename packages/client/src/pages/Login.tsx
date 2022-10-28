@@ -26,9 +26,17 @@ function Login() {
             } = oauthProvider;
 
             (async () => {
-                const result = await axios.post(url, {
-                    code,
-                });
+                const result = await axios.post(
+                    url,
+                    {
+                        code,
+                    },
+                    {
+                        params: {
+                            state,
+                        },
+                    }
+                );
 
                 console.log(result.data);
             })();
