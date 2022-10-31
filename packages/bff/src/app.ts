@@ -1,12 +1,39 @@
-import axios from "axios";
 import express, { json, Request, Response } from "express";
-import { findProviderCredentials } from "./providers";
+import session from "express-session";
 import cors from "cors";
+import connectRedis from "connect-redis";
+import { redis } from "./redis";
+import {
+    AvailableProviders,
+    findProviderFactory,
+} from "./providers/find-provider-factory";
 
 const app = express();
 
-app.use(cors());
+const RedisStore = connectRedis(session);
+
+app.use(
+    cors({
+        origin: process.env.CLIENT_ORIGIN,
+    })
+);
 app.use(json());
+app.use(
+    session({
+        store: new RedisStore({
+            client: redis,
+        }),
+        name: "sid",
+        secret: "secret",
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            maxAge: 1000 * 60 * 60 * 2,
+        },
+    })
+);
 
 app.get("/health", (_, res: Response) => {
     return res.json("BFF proxy is up and running");
@@ -15,13 +42,15 @@ app.get("/health", (_, res: Response) => {
 app.post("/token", async (req: Request, res: Response) => {
     const { code } = req.body;
 
-    const state = req.query.state as string;
+    const state = req.query.state as AvailableProviders;
 
+    const provider = findProviderFactory(state, code);
+
+    //TODO add session id cookie
+    return res.json(await provider.fetchAccessToken());
+
+    /*
     const { url, ...provider } = findProviderCredentials(state);
-
-    console.log(url);
-
-    console.log(provider.redirect_uri);
 
     const result = await axios.post(
         url,
@@ -34,11 +63,8 @@ app.post("/token", async (req: Request, res: Response) => {
         }
     );
 
-    res.cookie("token", JSON.stringify(result.data), {
-        maxAge: 15000 * 60,
-    });
-
     return res.json(result.data);
+	*/
 });
 
 export default app;

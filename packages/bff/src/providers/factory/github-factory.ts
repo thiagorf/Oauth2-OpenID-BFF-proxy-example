@@ -1,5 +1,5 @@
 import { URLSearchParams } from "url";
-import { AbstractFactory } from "./abstract_factory";
+import { AbstractFactory } from "./abstract-factory";
 
 export class GithubFactory extends AbstractFactory {
     protected client_id = process.env.GITHUB_CLIENT_ID;

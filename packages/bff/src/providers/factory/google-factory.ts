@@ -1,5 +1,5 @@
 import { URLSearchParams } from "url";
-import { AbstractFactory } from "./abstract_factory";
+import { AbstractFactory } from "./abstract-factory";
 
 export class GoogleFactory extends AbstractFactory {
     protected client_id = process.env.GOOGLE_CLIENT_ID;
