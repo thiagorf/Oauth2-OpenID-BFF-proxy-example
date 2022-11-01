@@ -1,11 +1,12 @@
+import axios from "axios";
 import { URLSearchParams } from "url";
 import { AbstractFactory } from "./abstract-factory";
 
 export class GoogleFactory extends AbstractFactory {
-    protected client_id = process.env.GOOGLE_CLIENT_ID;
-    protected client_secret = process.env.GOOGLE_CLIENT_SECRET;
-    protected provider_uri = process.env.GOOGLE_URL;
-    private redirect_uri = process.env.GOOGLE_REDIRECT_URI;
+    protected client_id = process.env.GOOGLE_CLIENT_ID || "";
+    protected client_secret = process.env.GOOGLE_CLIENT_SECRET || "";
+    protected provider_uri = process.env.GOOGLE_URL || "";
+    private redirect_uri = process.env.GOOGLE_REDIRECT_URI || "";
     private grant_type = "authorization_code";
 
     constructor(code: string) {
@@ -20,11 +21,10 @@ export class GoogleFactory extends AbstractFactory {
             redirect_uri: this.redirect_uri,
             grant_type: this.grant_type,
         });
+        console.log(params);
 
-        const result = await fetch(`${this.provider_uri}?${params}`, {
-            method: "POST",
-        }).then((res) => res.json());
+        const result = await axios.post(`${this.provider_uri}?${params}`);
 
-        return result;
+        return result.data;
     }
 }

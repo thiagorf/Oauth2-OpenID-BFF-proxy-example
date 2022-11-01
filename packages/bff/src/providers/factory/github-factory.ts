@@ -1,10 +1,11 @@
 import { URLSearchParams } from "url";
 import { AbstractFactory } from "./abstract-factory";
+import axios from "axios";
 
 export class GithubFactory extends AbstractFactory {
-    protected client_id = process.env.GITHUB_CLIENT_ID;
-    protected client_secret = process.env.GITHUB_CLIENT_SECRET;
-    protected provider_uri = process.env.GITHUB_URL;
+    protected client_id = process.env.GITHUB_CLIENT_ID || "";
+    protected client_secret = process.env.GITHUB_CLIENT_SECRET || "";
+    protected provider_uri = process.env.GITHUB_URL || "";
 
     constructor(code: string) {
         super(code);
@@ -17,10 +18,9 @@ export class GithubFactory extends AbstractFactory {
             client_secret: this.client_secret,
             code: this.code,
         });
-        const result = fetch(`${this.provider_uri}?${params}`, {
-            method: "POST",
-        }).then((res) => res.json());
 
-        return result;
+        const result = await axios.post(`${this.provider_uri}?${params}`);
+
+        return result.data;
     }
 }
