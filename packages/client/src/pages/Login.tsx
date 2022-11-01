@@ -1,9 +1,11 @@
 import axios from "axios";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Provider } from "../components/provider";
 import { providers } from "../core/providers";
 
 function Login() {
+    const navigate = useNavigate();
     const URI = new URLSearchParams(window.location.search);
 
     useEffect(() => {
@@ -26,11 +28,35 @@ function Login() {
             } = oauthProvider;
 
             (async () => {
-                const result = await axios.post(url, {
-                    code,
-                });
+                const result = await axios.post(
+                    url,
+                    {
+                        code,
+                    },
+                    {
+                        params: {
+                            state,
+                        },
+                    }
+                );
 
+                /*
+                const params = new URLSearchParams({
+                    state,
+                });
+                const result = await fetch(`${url}?${params}`, {
+                    method: "POST",
+                    mode: "cors",
+                    body: JSON.stringify({
+                        code: code,
+                    }),
+                }).then((res) => res.json());
+				*/
+
+                //Change
                 console.log(result.data);
+                localStorage.setItem("token", JSON.stringify(result.data));
+                navigate("/me");
             })();
         }
     }, []);

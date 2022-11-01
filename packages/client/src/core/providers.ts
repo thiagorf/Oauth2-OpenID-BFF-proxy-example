@@ -1,4 +1,6 @@
-const bffURL = import.meta.env.BFF_PROXY_URL;
+const bffURL = import.meta.env.VITE_BFF_PROXY_BASE_URL + "/token";
+
+console.log(bffURL);
 
 //type IdentityProvider = "github" | "google" | "linkedin";
 

@@ -1,37 +1,58 @@
-import axios from "axios";
+import dotenv from "dotenv"; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
+dotenv.config();
 import express, { json, Request, Response } from "express";
-import { findProviderCredentials } from "./providers";
+import session from "express-session";
 import cors from "cors";
+import connectRedis from "connect-redis";
+import { redis } from "./redis";
+import {
+    AvailableProviders,
+    findProviderFactory,
+} from "./providers/find-provider-factory";
 
 const app = express();
 
+// check connection
+const RedisStore = connectRedis(session);
+
 app.use(cors());
 app.use(json());
+app.use(
+    session({
+        store: new RedisStore({
+            client: redis,
+        }),
+        name: "sid",
+        secret: "asdasd",
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            maxAge: 1000 * 60 * 60 * 2,
+        },
+    })
+);
 
 app.get("/health", (_, res: Response) => {
-    return res.json("BFF proxy is up and running");
+    return res.json("BFF proxy is up and running!");
 });
 
 app.post("/token", async (req: Request, res: Response) => {
     const { code } = req.body;
 
-    const state = req.params.state;
-    const provider_name = state.split("|")[1];
+    const state = req.query.state as AvailableProviders;
 
-    const { url, ...provider } = findProviderCredentials(provider_name);
+    console.log(state);
 
-    const result = await axios.post(
-        url,
-        {},
-        {
-            params: {
-                code,
-                ...provider,
-            },
-        }
-    );
+    if (!state) {
+        throw new Error("State param is required!");
+    }
 
-    return res.json(result.data);
+    const provider = findProviderFactory(state, code);
+
+    //TODO add session id cookie
+    return res.json(await provider.fetchAccessToken());
 });
 
 export default app;
