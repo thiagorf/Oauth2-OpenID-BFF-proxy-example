@@ -1,24 +1,26 @@
 {
-  "name": "oauth-openid-example",
-  "private": "true",
-  "version": "1.0.0",
-  "main": "index.js",
-  "repository": "git@github.com:thiagorf/Oauth2-OpenID-BFF-proxy-example.git",
-  "author": "thiagorf <trfarciroli@gmail.com>",
-  "license": "MIT",
-  "scripts": {
-    "dev": "lerna run dev"
-  },
-  "workspaces": [
-    "packages/*"
-  ],
-  "devDependencies": {
-    "lerna": "^6.0.1"
-  },
-  "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.41.0",
-    "eslint": "^8.26.0",
-    "eslint-config-prettier": "^8.5.0",
-    "prettier": "^2.7.1"
-  }
+    "name": "oauth-openid-example",
+    "private": "true",
+    "version": "1.0.0",
+    "main": "index.js",
+    "repository": "git@github.com:thiagorf/Oauth2-OpenID-BFF-proxy-example.git",
+    "author": "thiagorf <trfarciroli@gmail.com>",
+    "license": "MIT",
+    "scripts": {
+        "dev:monorepo": "lerna run dev",
+        "container:build": "docker compose up --build",
+        "container:run": "docker compose up"
+    },
+    "workspaces": [
+        "packages/*"
+    ],
+    "devDependencies": {
+        "lerna": "^6.0.1"
+    },
+    "dependencies": {
+        "@typescript-eslint/eslint-plugin": "^5.41.0",
+        "eslint": "^8.26.0",
+        "eslint-config-prettier": "^8.5.0",
+        "prettier": "^2.7.1"
+    }
 }
