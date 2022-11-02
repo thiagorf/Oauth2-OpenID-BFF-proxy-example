@@ -11,18 +11,22 @@ services:
         build: ./packages/bff
         environment:
             - REDIS_HOST=redis
+        restart: always
         ports:
             - "8000:8000"
         depends_on:
             - redis
         volumes:
-            - ./packages/bff/:/usr/app
+            - ./packages/bff:/urs/app
             - /urs/app/node_modules
     client:
-        build: ./packages/client
+        build:
+            context: ./packages/client
         ports:
             - "3000:3000"
-        depends_on:
-            - bff
+        restart: always
+        volumes:
+            - ./packages/client:/client
+            - /client/node_modules
 volumes:
     cache:

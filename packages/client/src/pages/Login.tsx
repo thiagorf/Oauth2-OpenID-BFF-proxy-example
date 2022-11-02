@@ -53,7 +53,7 @@ function Login() {
                 }).then((res) => res.json());
 				*/
 
-                //Change
+                //Change!
                 console.log(result.data);
                 localStorage.setItem("token", JSON.stringify(result.data));
                 navigate("/me");
@@ -64,7 +64,7 @@ function Login() {
     return (
         <div className="border rounded w-[360px] h-96 mx-auto mt-20">
             <h3 className="text-center text-2xl font-semibold">
-                Select a Provider
+                Select a Provider!
                 {providers.map((provider, index) => (
                     <Provider key={index} {...provider} />
                 ))}

@@ -6,10 +6,10 @@ COPY package.json ./
 COPY tsconfig.node.json ./
 COPY vite.config.ts ./
 
-RUN npm install
+RUN yarn install
 
 COPY . .
 
 EXPOSE 3000
 
-CMD ["npm", "run", "dev"]
+CMD ["yarn", "dev"]
