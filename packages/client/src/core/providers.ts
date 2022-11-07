@@ -1,9 +1,5 @@
 const bffURL = import.meta.env.VITE_BFF_PROXY_BASE_URL + "/token";
 
-console.log(bffURL);
-
-//type IdentityProvider = "github" | "google" | "linkedin";
-
 export interface OauthProvider {
     provider: string;
     url: string;
@@ -17,6 +13,8 @@ export interface OauthProvider {
         url: string;
     };
 }
+
+//TODO refactoring
 
 export const providers: OauthProvider[] = ["GOOGLE", "GITHUB", "LINKEDIN"].map(
     (openid) => ({
@@ -33,50 +31,3 @@ export const providers: OauthProvider[] = ["GOOGLE", "GITHUB", "LINKEDIN"].map(
         },
     })
 );
-
-/*
-export const providers: OauthProvider[] = [
-    {
-        provider: "google",
-        url: import.meta.env.GOOGLE_URL,
-        response_type: "code",
-        authCode: {
-            client_id: import.meta.env.GOOGLE_CLIENT_ID,
-            redirect_uri: import.meta.env.GOOGLE_REDIRECT_URI,
-            state: import.meta.env.GOOGLE_STATE,
-            scope: import.meta.env.GOOGLE_SCOPE,
-        },
-        bffProxy: {
-            url: bffURL,
-        },
-    },
-	{
-        provider: "github",
-        url: import.meta.env.GITHUB_URL,
-        response_type: "code",
-        authCode: {
-            client_id: import.meta.env.GITHUB_CLIENT_ID,
-            redirect_uri: import.meta.env.GOOGLE_REDIRECT_URI,
-            state: import.meta.env.GOOGLE_STATE,
-            scope: import.meta.env.GOOGLE_SCOPE,
-        },
-        bffProxy: {
-            url: bffURL,
-        },
-    },
-	{
-        provider: "google",
-        url: import.meta.env.GOOGLE_URL,
-        response_type: "code",
-        authCode: {
-            client_id: import.meta.env.GOOGLE_CLIENT_ID,
-            redirect_uri: import.meta.env.GOOGLE_REDIRECT_URI,
-            state: import.meta.env.GOOGLE_STATE,
-            scope: import.meta.env.GOOGLE_SCOPE,
-        },
-        bffProxy: {
-            url: bffURL,
-        },
-    },
-];
-*/

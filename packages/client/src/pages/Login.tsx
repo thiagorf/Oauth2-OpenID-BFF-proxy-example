@@ -1,6 +1,5 @@
-import axios from "axios";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { Provider } from "../components/provider";
 import { providers } from "../core/providers";
 
@@ -28,47 +27,41 @@ function Login() {
             } = oauthProvider;
 
             (async () => {
-                const result = await axios.post(
-                    url,
-                    {
-                        code,
-                    },
-                    {
-                        params: {
-                            state,
-                        },
-                    }
-                );
-
-                /*
                 const params = new URLSearchParams({
                     state,
                 });
                 const result = await fetch(`${url}?${params}`, {
                     method: "POST",
-                    mode: "cors",
+                    credentials: "include",
+                    headers: {
+                        "Content-type": "application/json",
+                    },
                     body: JSON.stringify({
                         code: code,
                     }),
-                }).then((res) => res.json());
-				*/
+                })
+                    .then((res) => res.json())
+                    .catch((err) => console.error(err));
 
                 //Change!
-                console.log(result.data);
-                localStorage.setItem("token", JSON.stringify(result.data));
+
+                localStorage.setItem("token", JSON.stringify(result));
+
                 navigate("/me");
             })();
         }
     }, []);
 
     return (
-        <div className="border rounded w-[360px] h-96 mx-auto mt-20">
-            <h3 className="text-center text-2xl font-semibold">
+        <div className="border rounded w-[360px] mx-auto mt-20">
+            <h3 className="text-center text-2xl font-semibold mb-6">
                 Select a Provider!
+            </h3>
+            <div className="flex flex-col items-center ">
                 {providers.map((provider, index) => (
                     <Provider key={index} {...provider} />
                 ))}
-            </h3>
+            </div>
         </div>
     );
 }

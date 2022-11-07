@@ -26,11 +26,11 @@ export const Provider = ({
     };
 
     return (
-        <div className="border rounded w-64 h-24">
-            {/*<a href={url}>Sign in with {provider}</a>*/}
-            <button onClick={() => handleSignIn(url)}>
-                Sign in with {provider}
-            </button>
-        </div>
+        <button
+            className="w-[80%] h-12 border mb-2"
+            onClick={() => handleSignIn(url)}
+        >
+            Sign in with <span className="font-bold">{provider}</span>
+        </button>
     );
 };
