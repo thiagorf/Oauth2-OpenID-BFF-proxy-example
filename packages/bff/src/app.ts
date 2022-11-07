@@ -1,4 +1,4 @@
-import dotenv from "dotenv"; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
+import dotenv from "dotenv";
 dotenv.config();
 import express, { json, Request, Response } from "express";
 import session from "express-session";
@@ -15,7 +15,12 @@ const app = express();
 // check connection
 const RedisStore = connectRedis(session);
 
-app.use(cors());
+app.use(
+    cors({
+        origin: "http://localhost:3000",
+        credentials: true,
+    })
+);
 app.use(json());
 app.use(
     session({
@@ -29,10 +34,18 @@ app.use(
         cookie: {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            maxAge: 1000 * 60 * 60 * 2,
+            maxAge: 1000 * 60 * 2,
+            sameSite: "lax",
         },
     })
 );
+
+app.use(function (req, res, next) {
+    if (!req.session) {
+        return next(new Error("oh no"));
+    }
+    next();
+});
 
 app.get("/health", (_, res: Response) => {
     return res.json("BFF proxy is up and running!");
@@ -43,16 +56,43 @@ app.post("/token", async (req: Request, res: Response) => {
 
     const state = req.query.state as AvailableProviders;
 
-    console.log(state);
-
     if (!state) {
         throw new Error("State param is required!");
     }
 
-    const provider = findProviderFactory(state, code);
+    try {
+        const provider = findProviderFactory(state, code);
 
-    //TODO add session id cookie
-    return res.json(await provider.fetchAccessToken());
+        const email = await provider.fetchAccessToken();
+
+        req.session.email = email;
+        req.session.provider = state;
+
+        req.session.save((err) => console.log(err));
+
+        return res.json(`Successfully created session id: ${req.sessionID}`);
+    } catch (e) {
+        console.log(`Error on ${state} provider`);
+
+        res.end();
+    }
+});
+
+app.get("/me", async (req: Request, res: Response) => {
+    return res.json({
+        email: req.session.email,
+        provider: req.session.provider,
+    });
+});
+
+app.get("/logout", async (req: Request, res: Response) => {
+    req.session.destroy(() => console.log("Destroyed"));
+
+    res.clearCookie("sid", {
+        httpOnly: true,
+    });
+
+    return res.json("Session destroyed");
 });
 
 export default app;

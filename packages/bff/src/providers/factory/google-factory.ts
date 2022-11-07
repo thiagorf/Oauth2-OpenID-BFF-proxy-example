@@ -1,6 +1,30 @@
 import axios from "axios";
+import { decode } from "jsonwebtoken";
 import { URLSearchParams } from "url";
 import { AbstractFactory } from "./abstract-factory";
+
+interface GoogleAccessTokenResponse {
+    access_token: string;
+    expires_in: number;
+    id_token: string;
+    scope: string;
+    token_type: "Bearer";
+    refresh_token?: string;
+}
+
+interface GoogleIDToken {
+    iss: string;
+    azp: string;
+    aud: string;
+    sub: string;
+    at_hash: string;
+    hd: string;
+    email: string;
+    email_verified: boolean;
+    iat: number;
+    exp: number;
+    nonce: string;
+}
 
 export class GoogleFactory extends AbstractFactory {
     protected client_id = process.env.GOOGLE_CLIENT_ID || "";
@@ -21,10 +45,13 @@ export class GoogleFactory extends AbstractFactory {
             redirect_uri: this.redirect_uri,
             grant_type: this.grant_type,
         });
-        console.log(params);
 
-        const result = await axios.post(`${this.provider_uri}?${params}`);
+        const result = await axios.post<GoogleAccessTokenResponse>(
+            `${this.provider_uri}?${params}`
+        );
 
-        return result.data;
+        const { email } = decode(result.data.id_token) as GoogleIDToken;
+
+        return email;
     }
 }
